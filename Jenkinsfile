@@ -32,5 +32,13 @@ node {
         app.push()
     }
 
+    echo "Deploying image"
+    stage("Deploy") 
+    docker.image('smesch/kubectl').inside{
+        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+            sh "kubectl --kubeconfig=$KUBECONFIG apply -f k8s-example.yaml --validate=false"
+        }
+    }
+
 }
 
